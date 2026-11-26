@@ -63,8 +63,14 @@ android {
                 } else {
                     signingConfigs.getByName("debug")
                 }
-            isMinifyEnabled = true
-            isShrinkResources = true
+            // Minify/shrink intentionally OFF for this direct-install
+            // APK: R8 full mode can strip classes a plugin needs at
+            // runtime, and a device once installed the APK fine but the
+            // app never showed its first screen. Reliability beats the
+            // smaller download here; the AAB for the Play Store can
+            // re-enable shrinking once the release is proven on device.
+            isMinifyEnabled = false
+            isShrinkResources = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",

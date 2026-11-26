@@ -27,11 +27,28 @@ void main() async {
     // No .env asset: fall back to --dart-define values (see AdminService).
   }
   final settings = SettingsService();
-  await settings.init();
+  // Every pre-runApp step is guarded: a failure in settings,
+  // notifications or the admin backend must never stop the app from
+  // opening (a real device once installed fine but never showed the
+  // first screen — most likely an unguarded init throwing before
+  // runApp). Each service degrades gracefully when its init fails.
+  try {
+    await settings.init();
+  } catch (_) {
+    // SettingsService falls back to defaults; see its getters.
+  }
   final notifications = NotificationService();
-  await notifications.init();
+  try {
+    await notifications.init();
+  } catch (_) {
+    // Reminders stay unavailable; the rest of the app works.
+  }
   // Pre-warm the admin backend state (no-op when Supabase is unconfigured).
-  await AdminService.instance.ensureInitialized();
+  try {
+    await AdminService.instance.ensureInitialized();
+  } catch (_) {
+    // Admin panel shows setup instructions instead of fake data.
+  }
   // Push the current next-prayer data to the home-screen widget
   // (best effort — widget failure never blocks startup).
   try {
