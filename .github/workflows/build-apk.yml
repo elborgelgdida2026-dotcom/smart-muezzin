@@ -59,11 +59,17 @@ jobs:
         # too. All patches target the pub-cache copies (idempotent;
         # re-applied after every `flutter pub get`, including on a warm
         # cache).
+        # Both Groovy (build.gradle) and Kotlin DSL (build.gradle.kts)
+        # plugin scripts are patched: newer plugins such as
+        # shared_preferences_android 2.5.5 use .kts, which the old
+        # build.gradle-only glob missed entirely — that is why run 15
+        # failed with the same ':jni' error as run 14. The compileSdk
+        # seds keep the '=' where Kotlin DSL needs it.
         run: |
-          for f in "$HOME"/.pub-cache/hosted/pub.dev/*/android/build.gradle; do
+          for f in "$HOME"/.pub-cache/hosted/pub.dev/*/android/build.gradle*; do
             [ -f "$f" ] || continue
             sed -i 's/\bjcenter()/mavenCentral()/g' "$f"
-            sed -i -E 's/compileSdkVersion\s*=?\s*[0-9]+/compileSdkVersion 37/g; s/compileSdk\s*=?\s*[0-9]+/compileSdk 37/g' "$f"
+            sed -i -E 's/(compileSdkVersion\s*=\s*)[0-9]+/\137/g; s/(compileSdkVersion\s+)[0-9]+/\137/g; s/(compileSdk\s*=\s*)[0-9]+/\137/g; s/(compileSdk\s+)[0-9]+/\137/g' "$f"
             # Plugins that follow Flutter's default compileSdk (36) hit
             # the same AAR check when a dependency needs 37
             # (:shared_preferences_android's ':jni' dep) — pin them to 37
