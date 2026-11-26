@@ -38,20 +38,25 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Patch flutter_qiblah for Gradle 9
-        # flutter_qiblah 3.2.0 is abandoned and its android/build.gradle
-        # still calls jcenter(), which Gradle 9 removed — the build fails
-        # evaluating project ':flutter_qiblah'. JCenter shut down years
-        # ago, so mavenCentral() is the correct replacement. The patch
-        # targets the pub-cache copy (idempotent; re-applied after every
-        # `flutter pub get`, including on a warm cache).
+      - name: Patch legacy plugins for Gradle 9
+        # Two abandoned/old plugins break under Gradle 9 (Flutter 3.50):
+        #  * flutter_qiblah 3.2.0 still calls jcenter(), which Gradle 9
+        #    removed — the build fails evaluating ':flutter_qiblah'.
+        #    JCenter shut down years ago; mavenCentral() is the correct
+        #    replacement.
+        #  * home_widget (all versions) compiles Kotlin with JVM target
+        #    1.8 but inlines bytecode built with JVM 11 (WorkManager),
+        #    failing ':home_widget:compileReleaseKotlin'. Bump to 17,
+        #    matching the app itself.
+        # Both patches target the pub-cache copies (idempotent; re-applied
+        # after every `flutter pub get`, including on a warm cache).
         run: |
-          for f in "$HOME"/.pub-cache/hosted/pub.dev/flutter_qiblah-*/android/build.gradle; do
-            if [ -f "$f" ]; then
-              sed -i 's/\bjcenter()/mavenCentral()/g' "$f"
-              echo "patched $f"
-            fi
+          for f in "$HOME"/.pub-cache/hosted/pub.dev/*/android/build.gradle; do
+            [ -f "$f" ] || continue
+            sed -i 's/\bjcenter()/mavenCentral()/g' "$f"
+            sed -i 's/jvmTarget = ["'"'"']1\.8["'"'"']/jvmTarget = "17"/g' "$f"
           done
+          echo "plugin patches applied"
 
       # NOTE: in Flutter 3.50 `flutter analyze` treats infos and warnings
       # as fatal by default (--fatal-infos/--fatal-warnings default true).
