@@ -24,7 +24,8 @@ dependencies:
   flutter_qiblah: ^3.2.0
   # Network + dates
   http: ^1.2.2
-  intl: ^0.19.0
+  # NOTE: Flutter 3.50's flutter_localizations requires intl ^0.20.3.
+  intl: ^0.20.3
   timezone: ^0.9.4
   # Hijri calendar
   hijri: ^3.0.0
