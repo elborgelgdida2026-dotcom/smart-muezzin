@@ -1,4 +1,4 @@
-import 'package:adhan/adhan.dart';
+import 'package:adhan_dart/adhan_dart.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smart_muezzin/services/prayer_service.dart';
 import 'package:smart_muezzin/services/qibla_service.dart';

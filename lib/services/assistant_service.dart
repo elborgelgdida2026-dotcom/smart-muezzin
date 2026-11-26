@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:adhan/adhan.dart';
+import 'package:adhan_dart/adhan_dart.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:hijri/hijri_calendar.dart';
 import '../models/azkar.dart';
@@ -85,7 +85,7 @@ class AssistantService {
             'الصلاة القادمة: ${next.entry.arabicName} الساعة '
             '${_hhmm(next.entry.time)} (متبقٍ '
             '${next.remaining.inHours} س و${next.remaining.inMinutes % 60} د).',
-        sources: ['حساب محلي بحزمة adhan — الطريقة: ${settings.method.arabicName}'],
+        sources: ['حساب محلي بحزمة adhan_dart — الطريقة: ${settings.method.arabicName}'],
       );
     }
 

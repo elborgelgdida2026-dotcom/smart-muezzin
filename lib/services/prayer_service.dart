@@ -1,7 +1,8 @@
-import 'package:adhan/adhan.dart';
+import 'package:adhan_dart/adhan_dart.dart';
 import '../models/prayer_times_model.dart';
 
-/// Prayer-times calculation using the `adhan` Dart package.
+/// Prayer-times calculation using the `adhan_dart` package (the
+/// maintained Dart-3 fork of `adhan`).
 /// Default method: Egyptian General Authority of Surveying.
 /// All computation is local — it works offline once a city is saved.
 class PrayerService {
@@ -21,34 +22,35 @@ class PrayerService {
     final CalculationParameters params;
     switch (method) {
       case PrayerMethod.egyptian:
-        params = CalculationMethod.egyptian().getParameters();
+        params = CalculationMethodParameters.egyptian();
         break;
       case PrayerMethod.muslimWorldLeague:
-        params = CalculationMethod.muslimWorldLeague().getParameters();
+        params = CalculationMethodParameters.muslimWorldLeague();
         break;
       case PrayerMethod.karachi:
-        params = CalculationMethod.karachi().getParameters();
+        params = CalculationMethodParameters.karachi();
         break;
       case PrayerMethod.northAmerica:
-        params = CalculationMethod.northAmerica().getParameters();
+        params = CalculationMethodParameters.northAmerica();
         break;
       case PrayerMethod.ummAlQura:
-        params = CalculationMethod.ummAlQura().getParameters();
+        params = CalculationMethodParameters.ummAlQura();
         break;
       case PrayerMethod.dubai:
-        params = CalculationMethod.dubai().getParameters();
+        params = CalculationMethodParameters.dubai();
         break;
       case PrayerMethod.kuwait:
-        params = CalculationMethod.kuwait().getParameters();
+        params = CalculationMethodParameters.kuwait();
         break;
       case PrayerMethod.qatar:
-        params = CalculationMethod.qatar().getParameters();
+        params = CalculationMethodParameters.qatar();
         break;
       case PrayerMethod.singapore:
-        params = CalculationMethod.singapore().getParameters();
+        params = CalculationMethodParameters.singapore();
         break;
       case PrayerMethod.turkey:
-        params = CalculationMethod.turkey().getParameters();
+        // adhan_dart names it Turkiye (Diyanet).
+        params = CalculationMethodParameters.turkiye();
         break;
     }
     params.madhab = madhab;
@@ -62,8 +64,11 @@ class PrayerService {
   /// Compute the six times for [date] at [city].
   List<PrayerTimeEntry> timesFor(SavedCity city, DateTime date) {
     final coords = Coordinates(city.latitude, city.longitude);
-    final components = DateComponents(date.year, date.month, date.day);
-    final pt = PrayerTimes(coords, components, _parameters());
+    final pt = PrayerTimes(
+      date: DateTime(date.year, date.month, date.day),
+      coordinates: coords,
+      calculationParameters: _parameters(),
+    );
     final now = DateTime.now();
     final current = pt.currentPrayer();
     PrayerTimeEntry entry(String key, String name, DateTime t) =>
@@ -105,13 +110,16 @@ class PrayerService {
   ({DateTime midnight, DateTime lastThird}) nightPortions(
       SavedCity city, DateTime date) {
     final coords = Coordinates(city.latitude, city.longitude);
-    final components = DateComponents(date.year, date.month, date.day);
-    final pt = PrayerTimes(coords, components, _parameters());
+    final pt = PrayerTimes(
+      date: DateTime(date.year, date.month, date.day),
+      coordinates: coords,
+      calculationParameters: _parameters(),
+    );
     final maghrib = pt.maghrib;
     final fajrNext = PrayerTimes(
-      coords,
-      DateComponents(date.year, date.month, date.day + 1),
-      _parameters(),
+      date: DateTime(date.year, date.month, date.day + 1),
+      coordinates: coords,
+      calculationParameters: _parameters(),
     ).fajr;
     final night = fajrNext.difference(maghrib);
     return (
