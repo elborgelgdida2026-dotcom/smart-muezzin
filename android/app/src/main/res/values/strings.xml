@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- App name string. Required by res/xml/next_prayer_widget_info.xml
+     (android:description="@string/app_name"); the Flutter template does
+     not define it, so the release link step failed with
+     "resource string/app_name not found". -->
+<resources>
+    <string name="app_name">المؤذن الذكي</string>
+</resources>
