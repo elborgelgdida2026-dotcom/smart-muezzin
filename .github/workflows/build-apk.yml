@@ -43,8 +43,14 @@ jobs:
         #   ANDROID_KEY_ALIAS, ANDROID_KEY_PASSWORD
         # If the secrets are absent, the AAB is built unsigned and the
         # step is skipped (the APK still builds).
-        if: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+        # NOTE: the secrets check lives inside the shell script, not in an
+        # `if:` expression — GitHub rejects `secrets.*` in `if:` at
+        # workflow-parse time for this repository.
         run: |
+          if [ -z "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" ]; then
+            echo "No keystore secret set; building unsigned."
+            exit 0
+          fi
           echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > android/app/upload-keystore.jks
           cat > android/key.properties <<EOF
           storeFile=upload-keystore.jks
