@@ -64,6 +64,11 @@ jobs:
             [ -f "$f" ] || continue
             sed -i 's/\bjcenter()/mavenCentral()/g' "$f"
             sed -i -E 's/compileSdkVersion\s*=?\s*[0-9]+/compileSdkVersion 37/g; s/compileSdk\s*=?\s*[0-9]+/compileSdk 37/g' "$f"
+            # Plugins that follow Flutter's default compileSdk (36) hit
+            # the same AAR check when a dependency needs 37
+            # (:shared_preferences_android's ':jni' dep) — pin them to 37
+            # as well, matching the app itself.
+            sed -i 's/flutter\.compileSdkVersion/37/g' "$f"
             if grep -q "jvmTarget" "$f"; then
               sed -i 's/jvmTarget = ["'"'"']1\.8["'"'"']/jvmTarget = "17"/g' "$f"
               sed -i 's/jvmTarget = ["'"'"']11["'"'"']/jvmTarget = "17"/g' "$f"
