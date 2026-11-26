@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- AppWidget metadata for the "الصلاة القادمة" home-screen widget.
+     minWidth/minHeight fit a 2x2 cell; resizeMode allows the user to
+     stretch it horizontally/vertically. updatePeriodMillis is 0 on
+     purpose: updates are pushed from Dart (WidgetService) whenever the
+     app runs, because Android does not guarantee timely periodic
+     widget refreshes. -->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="180dp"
+    android:minHeight="110dp"
+    android:updatePeriodMillis="0"
+    android:initialLayout="@layout/next_prayer_widget"
+    android:resizeMode="horizontal|vertical"
+    android:widgetCategory="home_screen"
+    android:description="@string/app_name" />
