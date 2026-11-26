@@ -38,6 +38,21 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Patch flutter_qiblah for Gradle 9
+        # flutter_qiblah 3.2.0 is abandoned and its android/build.gradle
+        # still calls jcenter(), which Gradle 9 removed — the build fails
+        # evaluating project ':flutter_qiblah'. JCenter shut down years
+        # ago, so mavenCentral() is the correct replacement. The patch
+        # targets the pub-cache copy (idempotent; re-applied after every
+        # `flutter pub get`, including on a warm cache).
+        run: |
+          for f in "$HOME"/.pub-cache/hosted/pub.dev/flutter_qiblah-*/android/build.gradle; do
+            if [ -f "$f" ]; then
+              sed -i 's/\bjcenter()/mavenCentral()/g' "$f"
+              echo "patched $f"
+            fi
+          done
+
       # NOTE: in Flutter 3.50 `flutter analyze` treats infos and warnings
       # as fatal by default (--fatal-infos/--fatal-warnings default true).
       # The 40+ infos here are the framework's own deprecation of
