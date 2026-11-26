@@ -46,15 +46,24 @@ jobs:
         #    replacement.
         #  * home_widget (all versions) compiles Kotlin with JVM target
         #    1.8 but inlines bytecode built with JVM 11 (WorkManager),
-        #    failing ':home_widget:compileReleaseKotlin'. Bump to 17,
-        #    matching the app itself.
-        # Both patches target the pub-cache copies (idempotent; re-applied
+        #    failing ':home_widget:compileReleaseKotlin'. Kotlin 2.x also
+        #    requires the Java and Kotlin JVM targets to match, so the
+        #    Java compat goes to 17 as well.
+        # The JVM-target fix is applied to every plugin that sets one, so
+        # any other plugin with the same mismatch is covered too. All
+        # patches target the pub-cache copies (idempotent; re-applied
         # after every `flutter pub get`, including on a warm cache).
         run: |
           for f in "$HOME"/.pub-cache/hosted/pub.dev/*/android/build.gradle; do
             [ -f "$f" ] || continue
             sed -i 's/\bjcenter()/mavenCentral()/g' "$f"
-            sed -i 's/jvmTarget = ["'"'"']1\.8["'"'"']/jvmTarget = "17"/g' "$f"
+            if grep -q "jvmTarget" "$f"; then
+              sed -i 's/jvmTarget = ["'"'"']1\.8["'"'"']/jvmTarget = "17"/g' "$f"
+              sed -i 's/jvmTarget = ["'"'"']11["'"'"']/jvmTarget = "17"/g' "$f"
+              sed -i 's/JvmTarget\.JVM_11/JvmTarget.JVM_17/g' "$f"
+              sed -i 's/JavaVersion\.VERSION_1_8/JavaVersion.VERSION_17/g' "$f"
+              sed -i 's/JavaVersion\.VERSION_11/JavaVersion.VERSION_17/g' "$f"
+            fi
           done
           echo "plugin patches applied"
 
