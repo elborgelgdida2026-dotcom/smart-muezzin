@@ -8,12 +8,22 @@ plugins {
 
 android {
     namespace = "com.smartmuezzin.app"
-    compileSdk = flutter.compileSdkVersion
+    // 37, not Flutter's default 36: home_widget 0.8.1 pulls in
+    // androidx.glance:glance-appwidget:1.3.0-alpha02, whose AAR metadata
+    // requires compiling against Android API 37 or later
+    // (:app:checkReleaseAarMetadata). targetSdk stays at Flutter's
+    // default; only compileSdk is raised, which opts into no new
+    // runtime behaviour.
+    compileSdk = 37
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        // Required by flutter_local_notifications' AAR metadata
+        // (:app:checkReleaseAarMetadata); its code uses java.time APIs
+        // that need core library desugaring below minSdk 26.
+        isCoreLibraryDesugaringEnabled = true
     }
 
     defaultConfig {
@@ -69,4 +79,5 @@ flutter {
 
 dependencies {
     implementation("androidx.core:core-ktx:1.13.1")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
 }
