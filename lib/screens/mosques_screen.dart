@@ -54,7 +54,8 @@ class _MosquesScreenState extends State<MosquesScreen> {
       if (permission == LocationPermission.always ||
           permission == LocationPermission.whileInUse) {
         final pos = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.medium,
+          locationSettings:
+              const LocationSettings(accuracy: LocationAccuracy.medium),
         ).timeout(const Duration(seconds: 15));
         lat = pos.latitude;
         lon = pos.longitude;

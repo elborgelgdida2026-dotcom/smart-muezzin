@@ -19,7 +19,6 @@ class _AzkarScreenState extends State<AzkarScreen> {
   String _category = AzkarService.categories.first;
   List<Zikr> _items = [];
   final Map<String, int> _counts = {};
-  Set<String> _done = {};
   bool _loading = true;
 
   @override
@@ -35,7 +34,6 @@ class _AzkarScreenState extends State<AzkarScreen> {
     } catch (_) {
       _bundled = [];
     }
-    _done = await _service.completedToday();
     _select(_category);
     if (mounted) setState(() => _loading = false);
   }

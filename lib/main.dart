@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:hijri/hijri_calendar.dart';
 import 'package:provider/provider.dart';
 import 'services/admin_service.dart';
 import 'services/notification_service.dart';
@@ -15,6 +16,8 @@ import 'screens/more_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Hijri month names in Arabic throughout the app.
+  HijriCalendar.setLocal('ar');
   // Optional: load SUPABASE_URL / SUPABASE_ANON_KEY from `.env`.
   // Missing file is fine — the app works fully without Supabase and the
   // admin panel shows setup instructions instead of fake data.

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:adhan_dart/adhan_dart.dart';
 import 'package:flutter/material.dart';
 import 'package:hijri/hijri_calendar.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' hide TextDirection;
 import '../models/prayer_times_model.dart';
 import '../services/prayer_service.dart';
 import '../services/settings_service.dart';
@@ -99,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 12),
           Text(gregorian, textAlign: TextAlign.center),
           Text(
-            '${hijri.hDay} ${hijri.getMonthName()} ${hijri.hYear} هـ',
+            '${hijri.hDay} ${hijri.getLongMonthName()} ${hijri.hYear} هـ',
             textAlign: TextAlign.center,
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),

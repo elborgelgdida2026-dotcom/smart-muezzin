@@ -157,8 +157,9 @@ class AdminService {
   /// supabase/README.md section 4. This only *reports* the level.
   Future<String> assuranceLevel() async {
     try {
-      final res = await _c.auth.mfa.getAuthenticatorAssuranceLevel();
-      return res.currentLevel.name;
+      // Synchronous in supabase_flutter 2.x; currentLevel is nullable.
+      final res = _c.auth.mfa.getAuthenticatorAssuranceLevel();
+      return res.currentLevel?.name ?? 'unknown';
     } catch (_) {
       return 'unknown';
     }

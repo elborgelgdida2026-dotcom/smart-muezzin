@@ -99,7 +99,7 @@ class UserSyncService {
         .eq('user_id', user.id)
         .limit(1);
     if (rows.isEmpty) return null;
-    final row = rows.first as Map<String, dynamic>;
+    final row = rows.first;
     return (
       data: Map<String, dynamic>.from(row['data'] as Map),
       updatedAt: DateTime.parse(row['updated_at'] as String),

@@ -28,7 +28,7 @@ class _HijriScreenState extends State<HijriScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              'اليوم: ${hijri.hDay} ${hijri.getMonthName()} ${hijri.hYear} هـ',
+              'اليوم: ${hijri.hDay} ${hijri.getLongMonthName()} ${hijri.hYear} هـ',
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),

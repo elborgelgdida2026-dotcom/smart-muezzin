@@ -69,7 +69,6 @@ class PrayerService {
       coordinates: coords,
       calculationParameters: _parameters(),
     );
-    final now = DateTime.now();
     final current = pt.currentPrayer();
     PrayerTimeEntry entry(String key, String name, DateTime t) =>
         PrayerTimeEntry(

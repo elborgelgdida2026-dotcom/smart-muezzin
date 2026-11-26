@@ -92,7 +92,7 @@ class AssistantService {
     if (_containsAny(lower, ['هجري', 'التاريخ'])) {
       final h = HijriCalendar.fromDate(DateTime.now());
       return AssistantAnswer(
-        text: 'التاريخ الهجري اليوم: ${h.hDay} ${h.getMonthName()} ${h.hYear} هـ.',
+        text: 'التاريخ الهجري اليوم: ${h.hDay} ${h.getLongMonthName()} ${h.hYear} هـ.',
         sources: ['التقويم الهجري — حساب تحويلي تقريبي، وقد يختلف يومًا عن الرؤية الرسمية'],
       );
     }
